@@ -2,7 +2,7 @@
 name: vincent-pr
 description: End-to-end workflow — wykryj zmiany, utwórz brancha wg konwencji, zacommituj (Conventional Commits), wypchnij i otwórz PR wypełniając template repo. Użyj tylko gdy użytkownik wprost zawoła /vincent:vincent-pr.
 disable-model-invocation: true
-allowed-tools: Bash, Read, Write, Grep, Glob, AskUserQuestion
+allowed-tools: Bash Read Write Grep Glob
 argument-hint: [opcjonalny opis PR-a]
 ---
 

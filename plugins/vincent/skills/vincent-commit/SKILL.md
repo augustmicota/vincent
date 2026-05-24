@@ -2,7 +2,7 @@
 name: vincent-commit
 description: Utwórz commit w stylu Conventional Commits z bieżących zmian (bez push, bez PR). Użyj tylko gdy użytkownik wprost zawoła /vincent:vincent-commit.
 disable-model-invocation: true
-allowed-tools: Bash, Read, Grep, AskUserQuestion
+allowed-tools: Bash Read Grep
 argument-hint: [opcjonalny opis commita]
 ---
 

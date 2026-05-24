@@ -2,7 +2,7 @@
 name: vincent-branch
 description: Utwórz nowego brancha w formacie <type>/<slug> wg Conventional Commits. Bez commita, bez push. Użyj tylko gdy użytkownik wprost zawoła /vincent:vincent-branch.
 disable-model-invocation: true
-allowed-tools: Bash, AskUserQuestion
+allowed-tools: Bash
 argument-hint: [opcjonalny opis o czym branch]
 ---
 
