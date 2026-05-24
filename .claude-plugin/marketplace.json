@@ -4,7 +4,11 @@
   "plugins": [
     {
       "name": "vincent",
-      "source": "./plugins/vincent",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/augustmicota/vincent.git",
+        "path": "plugins/vincent"
+      },
       "description": "Osobisty asystent workflow: branch, commit i PR zgodne z konwencją"
     }
   ]
