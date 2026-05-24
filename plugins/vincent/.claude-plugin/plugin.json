@@ -1,7 +1,7 @@
 {
   "name": "vincent",
   "description": "Osobisty asystent workflow: branch, commit i PR zgodne z konwencją",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "august"
   }
