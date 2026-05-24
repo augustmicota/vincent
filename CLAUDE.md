@@ -2,44 +2,83 @@
 
 To repo jest **pluginem Claude Code**. Plik `plugins/vincent/.claude-plugin/plugin.json` jest manifestem dystrybuowanym do innych projektów przez GitHub marketplace.
 
-## Reguła: zawsze bumpuj wersję przed commitem
+---
 
-**Każda zmiana w `plugins/vincent/` MUSI być commitowana razem z bumpem patch wersji** w `plugins/vincent/.claude-plugin/plugin.json`.
+# 🛡️ GUARDRAILS
 
-Przykład: `0.1.5` → `0.1.6`.
+Bezwzględne reguły, których AI **musi** przestrzegać pracując nad tym repo. **Brak wyjątków. Brak negocjacji.** Jeśli widzisz że za chwilę je złamiesz — zatrzymaj się i powiedz użytkownikowi, nie kontynuuj.
 
-### Dlaczego
+Każdy guardrail ma format:
 
-Auto-update u użytkowników Vincenta odpala się tylko gdy `version` w manifeście się zmieni. Commit bez bumpa = zmiana nigdy nie trafia do drugiego projektu, nawet jeśli pushniesz na GitHub.
+- **Reguła** — co konkretnie ma się stać / nie stać.
+- **Zakres** — gdzie reguła obowiązuje (jakie pliki, jakie akcje).
+- **Dlaczego** — żeby AI rozumiało intencję i potrafiło ocenić edge case, a nie tylko ślepo dopasowywało literę.
+- **Jak weryfikować** — krótki check, czy regułę spełniłeś przed przejściem dalej.
 
-### Kiedy bumpować
+---
 
-- **Patch** (`0.1.X` → `0.1.X+1`) — domyślnie. Każda zmiana w skillach, templatkach, fixach.
-- **Minor** (`0.X.0` → `0.X+1.0`) — gdy dodajesz nowy skill albo nowy widoczny feature.
-- **Major** (`X.0.0` → `X+1.0.0`) — gdy łamiesz wsteczną kompatybilność (np. usuwasz/przemianowujesz skill).
+## G1 — Bump wersji przed commitem
 
-### Jak to zrobić w praktyce
+**Reguła:** Każdy commit, który dotyka czegokolwiek w `plugins/vincent/`, MUSI zawierać też zmianę pola `version` w `plugins/vincent/.claude-plugin/plugin.json`.
 
-Dogfood: użyj skilla Vincenta do bumpowania samego Vincenta.
+**Zakres:** dowolny plik pod `plugins/vincent/` (skille, templatki, plugin.json, agents/, hooks/ itd.). Zmiany **poza** `plugins/vincent/` (README, CLAUDE.md, `.claude/`, .gitignore) są zwolnione — nie są dystrybuowane.
 
-1. Na początku pracy nad zmianą: `/vincent:vincent-bumpversion` (domyślnie patch, można `/vincent:vincent-bumpversion minor` albo `major`).
-2. Skill znajdzie `plugins/vincent/.claude-plugin/plugin.json`, podbije wersję i pokaże diff.
-3. Dalej commitujesz normalnie — `/vincent:vincent-commit` lub `/vincent:vincent-pr`.
+**Dlaczego:** auto-update Claude Code u użytkowników odpala się **tylko gdy pole `version` w manifeście się zmieni**. Commit bez bumpa = zmiana wisi na GitHubie, ale nikt jej nigdy nie dostanie.
 
-Jeśli zapomnisz odpalić `vincent-bumpversion` i przejdziesz prosto do commita — **przerwij**, odpal bumpversion, dopiero potem commit.
+**Jak weryfikować:** przed `git commit` uruchom mentalnie:
 
-### Wyjątek
+```
+git diff --cached --name-only | grep '^plugins/vincent/' && \
+git diff --cached plugins/vincent/.claude-plugin/plugin.json | grep '"version"'
+```
 
-Zmiany **poza** `plugins/vincent/` (np. README, CLAUDE.md, `.claude/`, dokumentacja w roocie) nie wymagają bumpa — nie są dystrybuowane jako część pluginu.
+Pierwszy filtr łapie zmiany w pluginie, drugi sprawdza że plugin.json:version też jest w stage. Oba muszą dać match albo żaden.
 
-## Struktura repo (skrót)
+**Jak bumpować:** `/vincent:vincent-bumpversion` (patch domyślnie; `minor` przy nowym skillu/featurze; `major` przy breaking change).
+
+---
+
+## G2 — Każdy skill ma prefix `vincent-`
+
+**Reguła:** Każdy skill w `plugins/vincent/skills/` ma nazwę zaczynającą się od `vincent-`. Dotyczy to **i** nazwy katalogu, **i** pola `name:` w frontmatterze.
+
+**Zakres:** każdy `plugins/vincent/skills/<dir>/SKILL.md`. Lokalne skille (`.claude/skills/` poza pluginem) są zwolnione — to nie są skille Vincenta.
+
+**Dlaczego:** chcemy `/vincent:vincent-commit`, nie `/vincent:commit`. Dłuższy zapis daje jednoznaczność w logach, autouzupełnianiu i dokumentacji — czytelne "to skill Vincenta" bez kontekstu.
+
+**Jak weryfikować:** po dodaniu skilla — nazwa katalogu zaczyna się od `vincent-`, frontmatter `name:` jest identyczny z nazwą katalogu, oba zaczynają się od `vincent-`.
+
+---
+
+## Jak dodawać nowe guardrails
+
+1. Numeruj sekwencyjnie (`G3`, `G4`, ...). Nie używaj ponownie numerów po usuniętych regułach — to wprowadza zamęt w historii.
+2. Stosuj cztery sekcje: **Reguła / Zakres / Dlaczego / Jak weryfikować**. Brak "Dlaczego" = guardrail nie do utrzymania, bo nikt nie wie kiedy odstąpić.
+3. Reguły piszesz w trybie rozkazującym ("MUSI", "NIE WOLNO"). Nie "raczej powinno", nie "warto".
+4. Jeśli reguła ma legitne wyjątki — to nie guardrail, tylko zwykła wytyczna. Umieść poniżej, pod `## Wytyczne` (osobna sekcja, nie tutaj).
+
+---
+
+# Praktyka
+
+## Workflow pracy nad Vincentem
+
+```
+1. Edytujesz coś w plugins/vincent/
+2. /vincent:vincent-bumpversion           # spełnia G1
+3. /vincent:vincent-commit                # albo vincent-pr
+```
+
+Edycje poza `plugins/vincent/` (np. ten plik) — krok 2 pomijasz.
+
+## Struktura repo
 
 ```
 vincent/
 ├── .claude-plugin/marketplace.json     # marketplace listing — NIE jest dystrybuowany
 ├── plugins/vincent/                    # PLUGIN — to leci do użytkowników
-│   ├── .claude-plugin/plugin.json      # bumpuj tutaj
-│   ├── skills/
+│   ├── .claude-plugin/plugin.json      # bumpuj tutaj (G1)
+│   ├── skills/                         # wszystkie nazwy z prefiksem vincent- (G2)
 │   └── templates/
 ├── CLAUDE.md                           # ten plik
 └── README.md
