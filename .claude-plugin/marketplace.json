@@ -4,7 +4,10 @@
   "plugins": [
     {
       "name": "vincent",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "augustmicota/vincent"
+      },
       "description": "Osobisty asystent workflow: branch, commit i PR zgodne z konwencją"
     }
   ]
