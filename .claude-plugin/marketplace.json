@@ -1,0 +1,11 @@
+{
+  "name": "vincent",
+  "owner": { "name": "august" },
+  "plugins": [
+    {
+      "name": "vincent",
+      "source": ".",
+      "description": "Osobisty asystent workflow: branch, commit i PR zgodne z konwencją"
+    }
+  ]
+}
