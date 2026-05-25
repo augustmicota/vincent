@@ -19,6 +19,21 @@ Twoja rola: zrób jeden czysty commit w Conventional Commits z bieżących zmian
 ### 2. Wywnioskuj `type`
 `feat | fix | chore | refactor | docs | test | perf | build | ci | style`. Niejednoznaczne → zapytaj przez `AskUserQuestion`.
 
+### 2a. Sprawdź branch przy feat
+Tylko gdy `type == feat`:
+- `git branch --show-current` → bieżący branch.
+- Jeśli bieżący branch to `main` lub `master`:
+  - Automatycznie utwórz nowy branch: `feat/<scope>` (snake_case, ≤40 znaków; scope z kroku 3).
+  - `git checkout -b feat/<scope>` — bez pytania usera, powiedz tylko który branch utworzyłeś.
+  - Kontynuuj commit na nowym branchu.
+- Jeśli bieżący branch to już feature branch (nie `main`/`master`):
+  - Porównaj scope zmian z nazwą bieżącego brancha.
+  - Jeśli zmiany pasują tematycznie → kontynuuj bez zmiany.
+  - Jeśli zmiany wyraźnie odbiegają od tematu bieżącego brancha (inny scope, inny obszar) →
+    `AskUserQuestion`: "Bieżący branch to `<branch>`, ale zmiany dotyczą `<scope>`. Przełączyć na nowy branch `feat/<scope>`?"
+    - Tak → `git checkout -b feat/<scope>` i kontynuuj.
+    - Nie → commit na bieżącym branchu.
+
 ### 3. Zaproponuj commit message
 - Format: `type(scope): summary` (≤72 znaków subject).
 - Opcjonalny body po pustej linii.
