@@ -1,6 +1,6 @@
 ---
 name: vincent-lecimy
-description: Odczytaj plan z ~/.claude/plans/, zaprezentuj kroki, potwierdź zakres z userem, wykonaj sekwencyjnie — po każdym kroku weryfikuj zgodność z planem, na końcu zaraportuj odchylenia.
+description: Odczytaj plan z ~/.claude/plans/, zaprezentuj kroki i od razu wykonaj sekwencyjnie — po każdym kroku weryfikuj zgodność z planem, na końcu zaraportuj odchylenia.
 disable-model-invocation: true
 allowed-tools: Bash Read Glob Grep Write Edit TodoWrite
 argument-hint: [opcjonalna nazwa pliku planu lub ścieżka do niego]
@@ -8,7 +8,7 @@ argument-hint: [opcjonalna nazwa pliku planu lub ścieżka do niego]
 
 # vincent-lecimy
 
-Twoja rola: wykonaj plan krok po kroku — z jednym checkpointem usera PRZED startem i pełnym raportem PO zakończeniu. W trakcie nie przerywasz na mikro-potwierdzenia; anomalie zatrzymują cię natychmiast.
+Twoja rola: wykonaj plan krok po kroku — pokaż podsumowanie kroków i od razu wykonaj, bez pytania o zgodę. Pełny raport PO zakończeniu. W trakcie nie przerywasz na mikro-potwierdzenia; anomalie zatrzymują cię natychmiast.
 
 ---
 
@@ -44,7 +44,7 @@ Dla każdego kroku zapamiętaj:
 
 ---
 
-## Krok 3 — Prezentacja i checkpoint
+## Krok 3 — Prezentacja planu
 
 Wypisz userowi:
 
@@ -59,18 +59,10 @@ Kroki do wykonania:
 
 Narzędzia których użyję: <lista unikalnych akcji/narzędzi z planu>
 
-Po zatwierdzeniu wykonam wszystkie kroki sekwencyjnie bez przerywania.
-Anomalie (akcje poza planem) zatrzymają mnie natychmiast.
-
-Lecimy? [tak/nie]
+Wykonuję wszystkie kroki sekwencyjnie. Anomalie zatrzymają mnie natychmiast.
 ```
 
-Czekaj na odpowiedź usera.
-- "nie" / "stop" / cokolwiek odmownego → przerwij, zwróć kontrolę.
-- "tak" / "lecimy" / "go" → przejdź do kroku 4.
-- Inna odpowiedź (np. edycja zakresu) → zaktualizuj rozumienie planu, ponownie pokaż listę kroków i zapytaj.
-
-**Uwaga o trybie wykonania:** Po zatwierdzeniu działasz autonomicznie. Nie pytasz o zgodę na każde pojedyncze wywołanie narzędzia — zatwierdzenie w tym kroku jest jedynym checkpointem. Wyjątek: akcja nieobecna w planie = natychmiastowe zatrzymanie (patrz krok 5).
+Wywołanie skilla jest akceptacją planu — przejdź od razu do kroku 4. Działasz autonomicznie: nie pytasz o zgodę na każde wywołanie narzędzia. Wyjątek: akcja nieobecna w planie = natychmiastowe zatrzymanie (patrz krok 5).
 
 ---
 
@@ -152,7 +144,7 @@ Po wykonaniu wszystkich kroków (lub po zatrzymaniu) wypisz:
 
 ## Zasady
 
-- **Jeden checkpoint przed, zero w trakcie (poza anomaliami).** Zatwierdzenie zakresu w kroku 3 to jedyne "czy zaczynamy?".
+- **Zero checkpointów w trakcie (poza anomaliami).** Wywołanie skilla = zgoda na wykonanie. Nie pytaj "czy zaczynamy?".
 - **Anomalia = stop natychmiastowy.** Nie wykonujesz akcji poza planem po cichu.
 - **Błąd = stop, nie naprawa po cichu.** Gdy krok padnie, czekasz na decyzję usera.
 - **TodoWrite jako live-widok.** User widzi postęp bez konieczności pytania.
