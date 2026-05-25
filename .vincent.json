@@ -1,0 +1,8 @@
+{
+  "jira": {
+    "cloudId": "66666482-da82-4eed-a18d-de8b64218d4e",
+    "projectKey": "VIN",
+    "boardId": 3,
+    "defaultIssueType": "Task"
+  }
+}
