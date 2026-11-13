@@ -1,7 +1,7 @@
 ## Context
 <dlaczego to robimy — problem, motywacja, link do PR/issue jeśli jest>
 
-## Acceptance criteria
+## AC
 - [ ] <warunek 1>
 - [ ] <warunek 2>
 

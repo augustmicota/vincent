@@ -62,7 +62,7 @@ Kaskada (pierwszy znaleziony wygrywa):
 - Walidacja: `mcp__atlassian__getJiraProjectIssueTypesMetadata` — sprawdź że wybrany typ istnieje w projekcie. Jeśli nie — pokaż dostępne i niech user wybierze.
 
 ### 5. Ustal `summary` (title)
-- Krótki, imperatywny, ≤80 znaków. Bez kropki na końcu.
+- Krótki, imperatywny, ≤60 znaków. Bez kropki na końcu.
 - Jeśli był argument do skilla → użyj go jako punkt wyjścia, ewentualnie skróć/popraw stylistycznie.
 - Brak argumentu → zapytaj usera (`AskUserQuestion` albo otwarte pytanie).
 
